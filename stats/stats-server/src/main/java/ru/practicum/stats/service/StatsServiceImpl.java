@@ -3,11 +3,10 @@ package ru.practicum.stats.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.exception.InvalidRequestException;
 import ru.practicum.stats.StatsCountDto;
 import ru.practicum.stats.StatsDto;
 import ru.practicum.stats.model.Stats;
-import ru.practicum.stats.model.StatsCount;
-import ru.practicum.stats.model.StatsCountMapper;
 import ru.practicum.stats.model.StatsMapper;
 import ru.practicum.stats.storage.StatsRepository;
 
@@ -33,22 +32,31 @@ public class StatsServiceImpl implements StatsService {
 
     @Autowired
     private final StatsRepository statsRepository;
-
-    private final StatsMapper statsMapper;
-    private final StatsCountMapper statsCountMapper;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public StatsDto createHit(StatsDto statsDto) {
         statsDto.setTimes(LocalDateTime.now());
-        return statsMapper.statsToDto(statsRepository.save(statsMapper.dtoToStats(statsDto)));
+        return StatsMapper.statsToDto(statsRepository.save(StatsMapper.dtoToStats(statsDto)));
     }
 
     @Override
     public List<StatsCountDto> getStats(String start, String end, List<String> uris, String unique) {
-        LocalDateTime startDate = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), formatter);
-        LocalDateTime endDate = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), formatter);
-        List<StatsCount> response = new ArrayList<>();
+        LocalDateTime startDate;
+        LocalDateTime endDate;
+
+        try {
+            startDate = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), formatter);
+            endDate = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), formatter);
+        } catch (Exception e) {
+            throw new InvalidRequestException("Дата начала и/или окончания выборки неверного формата");
+        }
+
+        if (startDate.isAfter(endDate)) {
+            throw new InvalidRequestException("Дата начала выборки не может быть после даты окончания выборки");
+        }
+
+        List<StatsCountDto> response = new ArrayList<>();
         List<Stats> statsData;
 
         if (uris.size() == 0) {
@@ -119,11 +127,14 @@ public class StatsServiceImpl implements StatsService {
 
         for (String currentUri : statsDataProcessed.keySet()) {
             for (String currentApp : statsDataProcessed.get(currentUri).keySet()) {
-                response.add(new StatsCount(statsDataProcessed.get(currentUri).get(currentApp), currentApp, currentUri));
+                response.add(StatsCountDto.builder()
+                        .uri(currentUri)
+                        .app(currentApp)
+                        .hits(statsDataProcessed.get(currentUri).get(currentApp))
+                        .build());
             }
         }
 
-        return response.stream().map(statsCountMapper::statsCountToDto)
-                .sorted(Comparator.comparing(StatsCountDto::getHits).reversed()).collect(Collectors.toList());
+        return response.stream().sorted(Comparator.comparing(StatsCountDto::getHits).reversed()).collect(Collectors.toList());
     }
 }

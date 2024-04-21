@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.stats.service.StatsService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class StatsController {
     }
 
     @PostMapping(path = "/hit")
-    public StatsDto createHit(@RequestBody StatsDto statsDto) {
+    public StatsDto createHit(@Valid @RequestBody StatsDto statsDto) {
         log.info("Получен запрос к эндпойнту /hit для записи обращения к эндпойнту " + statsDto.getUri()
                 + " от приложения " + statsDto.getApp());
         return statsService.createHit(statsDto);

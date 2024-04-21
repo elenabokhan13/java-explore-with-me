@@ -1,11 +1,9 @@
 package ru.practicum.stats.model;
 
-import org.springframework.stereotype.Component;
 import ru.practicum.stats.StatsDto;
 
-@Component
 public class StatsMapper {
-    public Stats dtoToStats(StatsDto statsDto) {
+    public static Stats dtoToStats(StatsDto statsDto) {
         return Stats.builder()
                 .app(statsDto.getApp())
                 .uri(statsDto.getUri())
@@ -14,7 +12,7 @@ public class StatsMapper {
                 .build();
     }
 
-    public StatsDto statsToDto(Stats stats) {
+    public static StatsDto statsToDto(Stats stats) {
         return StatsDto.builder()
                 .app(stats.getApp())
                 .uri(stats.getUri())

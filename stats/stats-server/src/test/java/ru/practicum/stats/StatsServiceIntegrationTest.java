@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import ru.practicum.stats.model.StatsCountMapper;
-import ru.practicum.stats.model.StatsMapper;
 import ru.practicum.stats.service.StatsServiceImpl;
 import ru.practicum.stats.storage.StatsRepository;
 
@@ -23,11 +21,6 @@ public class StatsServiceIntegrationTest {
 
     @Autowired
     StatsRepository statsRepository;
-    @Autowired
-    private StatsMapper statsMapper;
-    @Autowired
-    private StatsCountMapper statsCountMapper;
-
     private StatsDto statsDtoOne;
     private StatsDto statsDtoTwo;
     private StatsDto statsDtoThree;
@@ -37,9 +30,7 @@ public class StatsServiceIntegrationTest {
 
     @BeforeEach
     public void createMeta() {
-        statsMapper = new StatsMapper();
-        statsCountMapper = new StatsCountMapper();
-        statsService = new StatsServiceImpl(statsRepository, statsMapper, statsCountMapper);
+        statsService = new StatsServiceImpl(statsRepository);
         statsDtoOne = StatsDto.builder()
                 .app("app-test")
                 .uri("/test")
