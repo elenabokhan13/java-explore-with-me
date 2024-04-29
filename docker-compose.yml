@@ -37,6 +37,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=OrDer$P@$$
       - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - STATS_SERVER_URL=http://stats-server:9090
 
   ewm-db:
     image: postgres:14-alpine

@@ -9,6 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 import ru.practicum.stats.service.StatsServiceImpl;
 import ru.practicum.stats.storage.StatsRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,17 +50,17 @@ public class StatsServiceIntegrationTest {
         statsCountDtoOne = StatsCountDto.builder()
                 .app("app-test")
                 .uri("/test/1")
-                .hits(2)
+                .hits(2L)
                 .build();
         statsCountDtoTwo = StatsCountDto.builder()
                 .app("app-test")
                 .uri("/test/1")
-                .hits(1)
+                .hits(1L)
                 .build();
         statsCountDtoThree = StatsCountDto.builder()
                 .app("app-test")
                 .uri("/test")
-                .hits(1)
+                .hits(1L)
                 .build();
 
         statsService.createHit(statsDtoOne);
@@ -69,7 +70,9 @@ public class StatsServiceIntegrationTest {
 
     @Test
     public void getStatsWithUriUniqueFalseTest() {
-        List<StatsCountDto> response = statsService.getStats("2000-03-01 00:00:00", "2025-01-01 00:00:00",
+        List<StatsCountDto> response = statsService.getStats(LocalDateTime.of(2020, 1, 1, 1,
+                        1, 1).toString(),
+                LocalDateTime.of(2025, 1, 1, 1, 1, 1).toString(),
                 List.of("/test/1"), "false");
 
         assertThat(response.contains(statsCountDtoOne));
@@ -77,7 +80,9 @@ public class StatsServiceIntegrationTest {
 
     @Test
     public void getStatsWithUriUniqueTrueTest() {
-        List<StatsCountDto> response = statsService.getStats("2000-03-01 00:00:00", "2025-01-01 00:00:00",
+        List<StatsCountDto> response = statsService.getStats(LocalDateTime.of(2020, 1, 1, 1,
+                        1, 1).toString(),
+                LocalDateTime.of(2025, 1, 1, 1, 1, 1).toString(),
                 List.of("/test/1"), "true");
 
         assertThat(response.contains(statsCountDtoThree));
@@ -85,7 +90,9 @@ public class StatsServiceIntegrationTest {
 
     @Test
     public void getStatsNoUriUniqueFalseTest() {
-        List<StatsCountDto> response = statsService.getStats("2000-03-01 00:00:00", "2025-01-01 00:00:00",
+        List<StatsCountDto> response = statsService.getStats(LocalDateTime.of(2020, 1, 1, 1,
+                        1, 1).toString(),
+                LocalDateTime.of(2025, 1, 1, 1, 1, 1).toString(),
                 List.of(), "false");
 
         assertThat(response.contains(statsCountDtoOne));

@@ -25,5 +25,5 @@ public class StatsCountDto {
     private String uri;
 
     @NotNull(message = "Колличество обращений к ссылке не может быть пустым")
-    private Integer hits;
+    private Long hits;
 }

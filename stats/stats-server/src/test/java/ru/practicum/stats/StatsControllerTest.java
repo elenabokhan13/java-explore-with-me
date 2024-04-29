@@ -58,7 +58,7 @@ class StatsControllerTest {
         StatsCountDto count = StatsCountDto.builder()
                 .uri("/test")
                 .app("app-test")
-                .hits(2)
+                .hits(2L)
                 .build();
 
         when(statsService.getStats(any(), any(), any(), any())).thenReturn(List.of(count));
