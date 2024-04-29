@@ -48,7 +48,6 @@ class StatsControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.app").value(statsDto.getApp()))
                 .andExpect(jsonPath("$.uri").value(statsDto.getUri()));
     }

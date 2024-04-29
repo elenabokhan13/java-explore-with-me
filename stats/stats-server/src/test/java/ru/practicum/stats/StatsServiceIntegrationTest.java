@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.practicum.stats.service.StatsServiceImpl.formatter;
 
 @SpringBootTest
 @Sql("/schema.sql")
@@ -71,8 +72,8 @@ public class StatsServiceIntegrationTest {
     @Test
     public void getStatsWithUriUniqueFalseTest() {
         List<StatsCountDto> response = statsService.getStats(LocalDateTime.of(2020, 1, 1, 1,
-                        1, 1).toString(),
-                LocalDateTime.of(2025, 1, 1, 1, 1, 1).toString(),
+                        1, 1).format(formatter),
+                LocalDateTime.of(2025, 1, 1, 1, 1, 1).format(formatter),
                 List.of("/test/1"), "false");
 
         assertThat(response.contains(statsCountDtoOne));
@@ -81,8 +82,8 @@ public class StatsServiceIntegrationTest {
     @Test
     public void getStatsWithUriUniqueTrueTest() {
         List<StatsCountDto> response = statsService.getStats(LocalDateTime.of(2020, 1, 1, 1,
-                        1, 1).toString(),
-                LocalDateTime.of(2025, 1, 1, 1, 1, 1).toString(),
+                        1, 1).format(formatter),
+                LocalDateTime.of(2025, 1, 1, 1, 1, 1).format(formatter),
                 List.of("/test/1"), "true");
 
         assertThat(response.contains(statsCountDtoThree));
@@ -91,8 +92,8 @@ public class StatsServiceIntegrationTest {
     @Test
     public void getStatsNoUriUniqueFalseTest() {
         List<StatsCountDto> response = statsService.getStats(LocalDateTime.of(2020, 1, 1, 1,
-                        1, 1).toString(),
-                LocalDateTime.of(2025, 1, 1, 1, 1, 1).toString(),
+                        1, 1).format(formatter),
+                LocalDateTime.of(2025, 1, 1, 1, 1, 1).format(formatter),
                 List.of(), "false");
 
         assertThat(response.contains(statsCountDtoOne));

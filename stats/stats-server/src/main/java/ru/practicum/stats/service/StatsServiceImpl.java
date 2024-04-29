@@ -30,7 +30,7 @@ public class StatsServiceImpl implements StatsService {
 
     @Autowired
     private final StatsRepository statsRepository;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public StatsDto createHit(StatsDto statsDto) {
