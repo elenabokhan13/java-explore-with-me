@@ -2,6 +2,8 @@ package ru.practicum.stats;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,10 +27,10 @@ public class StatsController {
     }
 
     @PostMapping(path = "/hit")
-    public StatsDto createHit(@Valid @RequestBody StatsDto statsDto) {
+    public ResponseEntity<StatsDto> createHit(@Valid @RequestBody StatsDto statsDto) {
         log.info("Получен запрос к эндпойнту /hit для записи обращения к эндпойнту " + statsDto.getUri()
                 + " от приложения " + statsDto.getApp());
-        return statsService.createHit(statsDto);
+        return new ResponseEntity<>(statsService.createHit(statsDto), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/stats")

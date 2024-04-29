@@ -44,8 +44,8 @@ public class StatsServiceImpl implements StatsService {
         LocalDateTime endDate;
 
         try {
-            startDate = LocalDateTime.parse(start);
-            endDate = LocalDateTime.parse(end);
+            startDate = LocalDateTime.parse(start, formatter);
+            endDate = LocalDateTime.parse(end, formatter);
         } catch (Exception e) {
             throw new InvalidRequestException("Дата начала и/или окончания выборки неверного формата");
         }

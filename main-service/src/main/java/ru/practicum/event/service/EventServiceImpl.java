@@ -47,6 +47,8 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static ru.practicum.constant.Constant.DATE_TIME_FORMAT;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -96,8 +98,9 @@ public class EventServiceImpl implements EventService {
         for (EventShortDto event : response) {
             uris.add("/events/" + event.getId());
         }
-        List<StatsCountDto> counts = statsClient.getStats(LocalDateTime.now().minusMonths(12).toString(),
-                LocalDateTime.now().toString(), uris, "false").getBody();
+        List<StatsCountDto> counts = statsClient.getStats(LocalDateTime.now().minusMonths(12)
+                        .format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)), uris, "false").getBody();
 
         if (counts.size() == 0) {
             return response;
@@ -124,7 +127,8 @@ public class EventServiceImpl implements EventService {
                 Status.CONFIRMED).size());
 
         List<StatsCountDto> views = Objects.requireNonNull(statsClient.getStats(LocalDateTime.now()
-                        .minusMonths(12).toString(), LocalDateTime.now().plusMonths(12).toString(),
+                        .minusMonths(12).format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
+                LocalDateTime.now().plusMonths(12).format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
                 List.of("/events/" + event.getId()), "true").getBody());
         if (views.size() > 0) {
             response.setViews(views.get(0).getHits());
@@ -154,7 +158,8 @@ public class EventServiceImpl implements EventService {
                 Status.CONFIRMED).size());
 
         List<StatsCountDto> views = Objects.requireNonNull(statsClient.getStats(LocalDateTime.now()
-                        .minusMonths(12).toString(), LocalDateTime.now().toString(),
+                        .minusMonths(12).format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
                 List.of("/events/" + eventValidated.getId()), "true").getBody());
         if (views.size() > 0) {
             response.setViews(views.get(0).getHits());
@@ -206,8 +211,9 @@ public class EventServiceImpl implements EventService {
         for (EventShortDto event : response) {
             uris.add("/events/" + event.getId());
         }
-        List<StatsCountDto> counts = statsClient.getStats(LocalDateTime.now().minusMonths(12).toString(),
-                LocalDateTime.now().toString(), uris, "true").getBody();
+        List<StatsCountDto> counts = statsClient.getStats(LocalDateTime.now().minusMonths(12)
+                        .format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)), uris, "true").getBody();
 
         if (counts.size() == 0) {
             return response;
@@ -248,7 +254,8 @@ public class EventServiceImpl implements EventService {
         response.setConfirmedRequests(requestRepository.findByEventAndStatus(response.getId(),
                 Status.CONFIRMED).size());
         List<StatsCountDto> views = Objects.requireNonNull(statsClient.getStats(LocalDateTime.now()
-                        .minusMonths(12).toString(), LocalDateTime.now().plusMonths(12).toString(),
+                        .minusMonths(12).format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
+                LocalDateTime.now().plusMonths(12).format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
                 List.of(request.getRequestURI()), "true").getBody());
         if (views.size() > 0) {
             response.setViews(views.get(0).getHits());
@@ -292,8 +299,9 @@ public class EventServiceImpl implements EventService {
         for (EventFullDto event : response) {
             uris.add("/events/" + event.getId());
         }
-        List<StatsCountDto> counts = statsClient.getStats(LocalDateTime.now().minusMonths(12).toString(),
-                LocalDateTime.now().toString(),
+        List<StatsCountDto> counts = statsClient.getStats(LocalDateTime.now().minusMonths(12)
+                        .format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
                 uris, "true").getBody();
 
         if (counts.size() == 0) {
@@ -335,7 +343,8 @@ public class EventServiceImpl implements EventService {
                 Status.CONFIRMED).size());
 
         List<StatsCountDto> views = Objects.requireNonNull(statsClient.getStats(LocalDateTime.now()
-                        .minusMonths(12).toString(), LocalDateTime.now().toString(),
+                        .minusMonths(12).format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)),
                 List.of("/events/" + eventValidated.getId()), "false").getBody());
         if (views.size() > 0) {
             response.setViews(views.get(0).getHits());
