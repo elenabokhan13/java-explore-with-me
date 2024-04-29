@@ -178,8 +178,8 @@ public class EventServiceImpl implements EventService {
 
         } else {
             specifications = searchFilterToSpecifications(text, categories, paid,
-                    LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                    , LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), onlyAvailable);
+                    LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), onlyAvailable);
         }
 
         int page = from / size;

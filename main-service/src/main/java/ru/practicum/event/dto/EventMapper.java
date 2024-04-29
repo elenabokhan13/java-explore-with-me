@@ -5,7 +5,7 @@ import ru.practicum.event.model.Event;
 import ru.practicum.user.dto.UserMapper;
 
 public class EventMapper {
-    public static EventShortDto eventToEventShortDto (Event event) {
+    public static EventShortDto eventToEventShortDto(Event event) {
         return EventShortDto.builder()
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.categoryToDto(event.getCategory()))
@@ -17,7 +17,7 @@ public class EventMapper {
                 .build();
     }
 
-    public static Event eventFromNewEventDto (NewEventDto newEventDto) {
+    public static Event eventFromNewEventDto(NewEventDto newEventDto) {
         return Event.builder()
                 .annotation(newEventDto.getAnnotation())
                 .description(newEventDto.getDescription())
@@ -30,7 +30,7 @@ public class EventMapper {
                 .build();
     }
 
-    public static EventFullDto eventToEventFullDto (Event event) {
+    public static EventFullDto eventToEventFullDto(Event event) {
         return EventFullDto.builder()
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.categoryToDto(event.getCategory()))

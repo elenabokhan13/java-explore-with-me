@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 
 public class EventValidator {
     public static Event validateEventExists(EventRepository eventRepository, Long id) {
-        return eventRepository.findById(id).
-                orElseThrow(() -> new ObjectNotFoundException("Event by id=" + id + " not found"));
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Event by id=" + id + " not found"));
     }
 
     public static Event validateRequest(CategoryRepository categoryRepository, Event event, UpdateEventRequest request) {
