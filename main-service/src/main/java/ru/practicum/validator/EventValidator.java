@@ -63,7 +63,7 @@ public class EventValidator {
             event.setRequestModeration(request.getRequestModeration());
         }
         if (request.getTitle() != null) {
-            if ((request.getTitle().length() >= 3) & (request.getTitle().length() <= 120)) {
+            if ((request.getTitle().length() >= 3) && (request.getTitle().length() <= 120)) {
                 event.setTitle(request.getTitle());
             } else {
                 throw new InvalidRequestException("Title should be between 3 and 120 characters");

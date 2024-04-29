@@ -370,7 +370,7 @@ public class EventServiceImpl implements EventService {
             specifications.add(categoryIn(categoryList));
         }
 
-        specifications.add((onlyAvailable == null) | (!Boolean.TRUE.equals(onlyAvailable)) ? null : onlyAvailable());
+        specifications.add((onlyAvailable == null) || (!Boolean.TRUE.equals(onlyAvailable)) ? null : onlyAvailable());
         specifications.add(onlyPublished(State.PUBLISHED));
 
         return specifications.stream().filter(Objects::nonNull).collect(Collectors.toList());

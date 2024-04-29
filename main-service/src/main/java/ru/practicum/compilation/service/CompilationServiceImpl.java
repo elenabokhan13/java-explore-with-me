@@ -115,7 +115,7 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto updateCompilation(Long compId, UpdateCompilationRequest compilation) {
         Compilation compilationUpdated = CompilationValidator.validateCompilationExists(compilationRepository, compId);
         if (compilation.getTitle() != null) {
-            if ((compilation.getTitle().length() >= 1) & (compilation.getTitle().length() <= 50)) {
+            if ((compilation.getTitle().length() >= 1) && (compilation.getTitle().length() <= 50)) {
                 Compilation current = compilationRepository.findByTitle(compilation.getTitle());
                 if (current != null) {
                     throw new AccessForbiddenError("Compilation with title " + compilation.getTitle() + " already exists");
