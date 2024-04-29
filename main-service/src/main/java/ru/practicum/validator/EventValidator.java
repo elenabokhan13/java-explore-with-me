@@ -23,7 +23,7 @@ public class EventValidator {
                     + event.getState());
         }
         if (request.getAnnotation() != null) {
-            if ((request.getAnnotation().length() >= 20) & (request.getAnnotation().length() <= 2000)) {
+            if ((request.getAnnotation().length() >= 20) && (request.getAnnotation().length() <= 2000)) {
                 event.setAnnotation(request.getAnnotation());
             } else {
                 throw new InvalidRequestException("Annotation should be between 20 and 2000 characters");
@@ -34,7 +34,7 @@ public class EventValidator {
                     .orElseThrow(() -> new ObjectNotFoundException("Category with id=" + request.getCategory() + " not found")));
         }
         if (request.getDescription() != null) {
-            if ((request.getDescription().length() >= 20) & (request.getDescription().length() <= 7000)) {
+            if ((request.getDescription().length() >= 20) && (request.getDescription().length() <= 7000)) {
                 event.setDescription(request.getDescription());
             } else {
                 throw new InvalidRequestException("Description should be between 20 and 7000 characters");
