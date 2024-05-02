@@ -8,7 +8,8 @@ import java.util.List;
 
 @Repository
 public interface CompilationEventRepository extends JpaRepository<CompilationEvent, Long> {
-    List<CompilationEvent> getByCompilationId(Long compilationId);
+
+    List<CompilationEvent> getByCompilationIdIn(List<Long> compilationId);
 
     void deleteByCompilationId(Long id);
 }

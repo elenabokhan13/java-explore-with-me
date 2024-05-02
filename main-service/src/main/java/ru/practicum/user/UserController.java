@@ -32,11 +32,6 @@ public class UserController {
     @Autowired
     private final UserService userService;
 
-/*    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }*/
-
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         log.info("Получен запрос к эндпойнту /admin/users для создания пользователя");

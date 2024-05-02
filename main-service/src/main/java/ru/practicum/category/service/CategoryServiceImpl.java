@@ -52,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (current != null) {
             throw new ServerErrorException("Category with name " + categoryDto.getName() + " already exists");
         }
-        return CategoryMapper.categoryToDto(categoryRepository.save(CategoryMapper.categoryfromDto(categoryDto)));
+        return CategoryMapper.categoryToDto(categoryRepository.save(CategoryMapper.categoryFromDto(categoryDto)));
     }
 
     @Override
@@ -77,6 +77,6 @@ public class CategoryServiceImpl implements CategoryService {
                 throw new ServerErrorException("Category with name \" + categoryDto.getName() + \" already exists");
             }
         }
-        return CategoryMapper.categoryToDto(categoryRepository.save(CategoryMapper.categoryfromDto(categoryDto)));
+        return CategoryMapper.categoryToDto(categoryRepository.save(CategoryMapper.categoryFromDto(categoryDto)));
     }
 }

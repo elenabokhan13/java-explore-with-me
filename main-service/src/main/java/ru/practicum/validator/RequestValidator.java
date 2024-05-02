@@ -9,7 +9,9 @@ import ru.practicum.request.model.ParticipationRequest;
 import ru.practicum.request.model.Status;
 import ru.practicum.request.storage.RequestRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -29,38 +31,14 @@ public class RequestValidator {
                 confirmedNumber += 1;
             }
         }
+        Map<Long, ParticipationRequest> requestsResponse;
         if (updateEvent.getStatus() == Status.REJECTED) {
-            for (Long requestId : updateEvent.getRequestIds()) {
-                ParticipationRequest currentRequest = requests.get(requestId);
-                if (currentRequest.getStatus() != Status.PENDING) {
-                    throw new ServerErrorException("Request must have status PENDING");
-                }
-                currentRequest.setStatus(Status.REJECTED);
-                requests.put(currentRequest.getId(), currentRequest);
-                requestRepository.save(currentRequest);
-            }
+            requestsResponse = setRejected(requestRepository, requests, updateEvent);
         } else {
-            for (Long requestId : updateEvent.getRequestIds()) {
-                ParticipationRequest currentRequest = requests.get(requestId);
-                if (currentRequest.getStatus() != Status.PENDING) {
-                    throw new ServerErrorException("Request must have status PENDING");
-                }
-                if ((confirmedNumber + 1) > event.getParticipantLimit()) {
-                    for (ParticipationRequest request : requests.values()) {
-                        if (request.getStatus() == Status.PENDING) {
-                            request.setStatus(Status.REJECTED);
-                            requests.put(request.getId(), request);
-                            requestRepository.save(request);
-                        }
-                    }
-                    throw new ServerErrorException("The participant limit has been reached");
-                }
-                currentRequest.setStatus(Status.CONFIRMED);
-                requests.put(currentRequest.getId(), currentRequest);
-                requestRepository.save(currentRequest);
-            }
+            requestsResponse = setConfirmed(requestRepository, requests, updateEvent,
+                    event, confirmedNumber);
         }
-        return requests;
+        return requestsResponse;
     }
 
     public static void validateNewRequest(RequestRepository requestRepository, ParticipationRequest request,
@@ -78,5 +56,51 @@ public class RequestValidator {
         if ((requests.size() == event.getParticipantLimit()) && (event.getParticipantLimit() != 0)) {
             throw new ServerErrorException("The event reached limit of participation requests");
         }
+    }
+
+    private static ParticipationRequest validateRequestPending(ParticipationRequest currentRequest) {
+        if (currentRequest.getStatus() != Status.PENDING) {
+            throw new ServerErrorException("Request must have status PENDING");
+        }
+        return currentRequest;
+    }
+
+    private static Map<Long, ParticipationRequest> setRejected(RequestRepository requestRepository,
+                                                               Map<Long, ParticipationRequest> requests,
+                                                               EventRequestStatusUpdateRequest updateEvent) {
+        List<ParticipationRequest> requestsToSave = new ArrayList<>();
+        for (Long requestId : updateEvent.getRequestIds()) {
+            ParticipationRequest currentRequest = validateRequestPending(requests.get(requestId));
+            currentRequest.setStatus(Status.REJECTED);
+            requests.put(currentRequest.getId(), currentRequest);
+            requestsToSave.add(currentRequest);
+        }
+        requestRepository.saveAll(requestsToSave);
+        return requests;
+    }
+
+    private static Map<Long, ParticipationRequest> setConfirmed(RequestRepository requestRepository,
+                                                                Map<Long, ParticipationRequest> requests,
+                                                                EventRequestStatusUpdateRequest updateEvent,
+                                                                Event event, int confirmedNumber) {
+        List<ParticipationRequest> requestsToSave = new ArrayList<>();
+        for (Long requestId : updateEvent.getRequestIds()) {
+            ParticipationRequest currentRequest = validateRequestPending(requests.get(requestId));
+            if ((confirmedNumber + 1) > event.getParticipantLimit()) {
+                for (ParticipationRequest request : requests.values()) {
+                    if (request.getStatus() == Status.PENDING) {
+                        request.setStatus(Status.REJECTED);
+                        requests.put(request.getId(), request);
+                        requestsToSave.add(request);
+                    }
+                }
+                throw new ServerErrorException("The participant limit has been reached");
+            }
+            currentRequest.setStatus(Status.CONFIRMED);
+            requests.put(currentRequest.getId(), currentRequest);
+            requestsToSave.add(currentRequest);
+        }
+        requestRepository.saveAll(requestsToSave);
+        return requests;
     }
 }

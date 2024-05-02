@@ -3,7 +3,7 @@ package ru.practicum.category.dto;
 import ru.practicum.category.model.Category;
 
 public class CategoryMapper {
-    public static Category categoryfromDto(CategoryDto categoryDto) {
+    public static Category categoryFromDto(CategoryDto categoryDto) {
         return Category.builder()
                 .id(categoryDto.getId())
                 .name(categoryDto.getName())
