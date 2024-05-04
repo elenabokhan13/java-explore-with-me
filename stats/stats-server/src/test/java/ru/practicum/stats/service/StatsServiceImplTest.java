@@ -59,12 +59,12 @@ class StatsServiceImplTest {
         StatsCountDto countDto = StatsCountDto.builder()
                 .uri("/test")
                 .app("app-test")
-                .hits(2)
+                .hits(2L)
                 .build();
         StatsCountDto count = StatsCountDto.builder()
                 .uri("/test")
                 .app("app-test")
-                .hits(2)
+                .hits(2L)
                 .build();
         Stats stats = Stats.builder()
                 .app("app-test")
@@ -73,15 +73,12 @@ class StatsServiceImplTest {
                 .times(LocalDateTime.now())
                 .build();
 
-        when(statsRepository.getByParametersNoUris(any(), any())).thenReturn(List.of(stats));
+        when(statsRepository.findByTimesBetween(any(), any())).thenReturn(List.of(stats));
 
         List<Stats> responseCurrent = statsRepository
-                .getByParametersNoUris(LocalDateTime.of(2000, 03, 01, 01, 01),
-                        LocalDateTime.of(2025, 03, 01, 01, 01));
+                .findByTimesBetween(LocalDateTime.of(2000, 3, 1, 1, 1),
+                        LocalDateTime.of(2025, 3, 1, 1, 1));
 
-        StatsCountDto response = count;
-
-        assertEquals(response.getUri(), count.getUri());
         assert (responseCurrent.contains(stats));
     }
 }

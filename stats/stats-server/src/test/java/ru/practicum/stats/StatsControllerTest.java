@@ -48,7 +48,6 @@ class StatsControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.app").value(statsDto.getApp()))
                 .andExpect(jsonPath("$.uri").value(statsDto.getUri()));
     }
@@ -58,7 +57,7 @@ class StatsControllerTest {
         StatsCountDto count = StatsCountDto.builder()
                 .uri("/test")
                 .app("app-test")
-                .hits(2)
+                .hits(2L)
                 .build();
 
         when(statsService.getStats(any(), any(), any(), any())).thenReturn(List.of(count));

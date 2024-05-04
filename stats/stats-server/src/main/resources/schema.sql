@@ -5,5 +5,6 @@ CREATE TABLE stats (
     app VARCHAR(60) NOT NULL,
     uri VARCHAR(60) NOT NULL,
     ip VARCHAR(15) NOT NULL,
-    times TIMESTAMP NOT NULL
-)
+    times TIMESTAMP NOT NULL,
+    CONSTRAINT pk_stats PRIMARY KEY (id)
+);

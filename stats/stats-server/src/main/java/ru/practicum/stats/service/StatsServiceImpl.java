@@ -11,8 +11,6 @@ import ru.practicum.stats.model.StatsMapper;
 import ru.practicum.stats.storage.StatsRepository;
 
 import javax.transaction.Transactional;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ public class StatsServiceImpl implements StatsService {
 
     @Autowired
     private final StatsRepository statsRepository;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public StatsDto createHit(StatsDto statsDto) {
@@ -46,8 +44,8 @@ public class StatsServiceImpl implements StatsService {
         LocalDateTime endDate;
 
         try {
-            startDate = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), formatter);
-            endDate = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), formatter);
+            startDate = LocalDateTime.parse(start, formatter);
+            endDate = LocalDateTime.parse(end, formatter);
         } catch (Exception e) {
             throw new InvalidRequestException("Дата начала и/или окончания выборки неверного формата");
         }
@@ -60,9 +58,9 @@ public class StatsServiceImpl implements StatsService {
         List<Stats> statsData;
 
         if (uris.size() == 0) {
-            statsData = statsRepository.getByParametersNoUris(startDate, endDate);
+            statsData = statsRepository.findByTimesBetween(startDate, endDate);
         } else {
-            statsData = statsRepository.getByParametersWithUris(startDate, endDate, uris);
+            statsData = statsRepository.findByTimesBetweenAndUriIn(startDate, endDate, uris);
         }
         Map<String, Map<String, Integer>> statsDataProcessed = new HashMap<>();
 
@@ -130,7 +128,7 @@ public class StatsServiceImpl implements StatsService {
                 response.add(StatsCountDto.builder()
                         .uri(currentUri)
                         .app(currentApp)
-                        .hits(statsDataProcessed.get(currentUri).get(currentApp))
+                        .hits(Long.valueOf(statsDataProcessed.get(currentUri).get(currentApp)))
                         .build());
             }
         }
