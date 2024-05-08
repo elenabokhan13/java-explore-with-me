@@ -7,12 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.category.dto.CategoryDto;
+import ru.practicum.comment.model.Comment;
 import ru.practicum.constant.Constant;
 import ru.practicum.event.model.Location;
 import ru.practicum.event.model.State;
 import ru.practicum.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -39,4 +41,5 @@ public class EventFullDto {
     private State state;
     private String title;
     private Long views;
+    private List<Comment> comments;
 }
